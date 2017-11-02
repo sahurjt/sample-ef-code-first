@@ -13,19 +13,19 @@ namespace SimpleEFApp.Controllers
     {
         NewsContext context = new NewsContext();
         // GET api/values
-        public IHttpActionResult Get()
+        public IEnumerable<Article> Get()
         {
             var r = context.Articles.ToList();
-            return Ok(r);
+            return r;
         }
 
         // GET api/values/5
-        [ResponseType(typeof(Article))]
-        public IHttpActionResult Get(int id)
+       // [ResponseType(typeof(Article))]
+        public Article Get(int id)
         {
             var post = context.Articles.Where(a => a.ArticleId == id).SingleOrDefault();
-            if (post == null) return NotFound();
-            return Ok(post);
+            if (post == null) return null;
+            return post;
         }
 
         [Route("api/values/add")]

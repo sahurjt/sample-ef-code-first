@@ -8,7 +8,7 @@ namespace SimpleEFApp.Models
 {
     public class NewsContext : DbContext
     {
-        public NewsContext() : base("name=MyDBRemote")
+        public NewsContext() : base("name=MyDB")
         {
 
         }

@@ -1,4 +1,3 @@
-c:\users\rajat-nineleaps\source\repos\SimpleEFApp\SimpleEFApp\obj\Debug\SimpleEFApp.csprojResolveAssemblyReference.cache
 c:\users\rajat-nineleaps\source\repos\SimpleEFApp\SimpleEFApp\obj\Debug\SimpleEFApp.csproj.CoreCompileInputs.cache
 c:\users\rajat-nineleaps\source\repos\SimpleEFApp\SimpleEFApp\bin\ApplicationInsights.config
 c:\users\rajat-nineleaps\source\repos\SimpleEFApp\SimpleEFApp\bin\roslyn\csc.exe
@@ -98,3 +97,8 @@ c:\users\rajat-nineleaps\source\repos\SimpleEFApp\SimpleEFApp\bin\Microsoft.AI.W
 c:\users\rajat-nineleaps\source\repos\SimpleEFApp\SimpleEFApp\bin\Microsoft.AI.Web.xml
 c:\users\rajat-nineleaps\source\repos\SimpleEFApp\SimpleEFApp\obj\Debug\SimpleEFApp.dll
 c:\users\rajat-nineleaps\source\repos\SimpleEFApp\SimpleEFApp\obj\Debug\SimpleEFApp.pdb
+C:\Users\Rajat-NineLeaps\source\repos\SimpleEFApp\SimpleEFApp\bin\FakeItEasy.dll
+C:\Users\Rajat-NineLeaps\source\repos\SimpleEFApp\SimpleEFApp\bin\FakeItEasy.pdb
+C:\Users\Rajat-NineLeaps\source\repos\SimpleEFApp\SimpleEFApp\bin\FakeItEasy.xml
+C:\Users\Rajat-NineLeaps\source\repos\SimpleEFApp\SimpleEFApp\bin\Microsoft.VisualStudio.CodeCoverage.Shim.dll
+C:\Users\Rajat-NineLeaps\source\repos\SimpleEFApp\SimpleEFApp\obj\Debug\SimpleEFApp.csprojResolveAssemblyReference.cache
