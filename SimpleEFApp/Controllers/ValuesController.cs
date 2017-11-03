@@ -6,26 +6,38 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using SimpleEFApp.Models;
+using SimpleEFApp.Interface;
+using SimpleEFApp.ModelOperation;
 
 namespace SimpleEFApp.Controllers
 {
     public class ValuesController : ApiController
     {
-        NewsContext context = new NewsContext();
-        // GET api/values
-        public IEnumerable<Article> Get()
+        private ICommonOperations context;
+        public ValuesController(ICommonOperations commonOperations)
         {
-            var r = context.Articles.ToList();
-            return r;
+            context = commonOperations;
+        }
+
+        public ValuesController() {
+           context = new CommonOperations();
+        }
+
+        // GET api/values
+        public IHttpActionResult Get()
+        {
+            // this can be used to eliminate cyclic refernce problem
+            var r = context.GetAllArticles();
+            return Ok(r);
         }
 
         // GET api/values/5
-       // [ResponseType(typeof(Article))]
-        public Article Get(int id)
+        // [ResponseType(typeof(Article))]
+        public IHttpActionResult Get(int id)
         {
-            var post = context.Articles.Where(a => a.ArticleId == id).SingleOrDefault();
-            if (post == null) return null;
-            return post;
+            var post = context.GetArticle(id);
+            if (post == null) return NotFound();
+            return Ok(post);
         }
 
         [Route("api/values/add")]
@@ -33,33 +45,22 @@ namespace SimpleEFApp.Controllers
         public IHttpActionResult AddNew(Article article)
         {
             article.ArticlePublishDate = DateTime.UtcNow;
-            context.Articles.Add(article);
-            context.SaveChanges();
+            context.AddArticle(article);
             return Ok("Data Stored");
         }
 
+        // Just for testing
         [Route("api/values/init")]
         [HttpGet]
-        public string Init()
+        public IHttpActionResult Init()
         {
-            Article article = new Article
-            {
-                ArticleId = 1,
-                ArticleAuthor = "Rajat s",
-                ArticleTitle = "second article",
-                ArticleDetail = "Some big Details",
-                // CategoryId=2};
-                Category = new Category { CategoryId = 1, CategoryTitle = "Random" }
-            };
-            context.Articles.Add(article);
-            context.SaveChanges();
-
-            return "Operation Completed";
+            context.Init();
+            return Ok("Operation Completed");
         }
 
         [Route("api/values/category")]
         [HttpGet]
-        public IHttpActionResult ByCat()
+        public IHttpActionResult ByCat(int id)
         {
             // select list of (article+category) where categoryid=1 using linq query
             //var r = (from a in context.Articles
@@ -86,10 +87,10 @@ namespace SimpleEFApp.Controllers
 
             //--------------------------------------------------------------------------
             // inner join using lambda exp.
-            var r = context.Articles.Join(context.Categories, // second table name
-                a => a.CategoryId, // foreign key
-                c => c.CategoryId, // primary key
-                (a, c) => new { a.ArticleTitle, a.ArticleDetail, c.CategoryTitle }); // projection
+            //var r = context.Articles.Join(context.Categories, // second table name
+            //    a => a.CategoryId, // foreign key
+            //    c => c.CategoryId, // primary key
+            //    (a, c) => new { a.ArticleTitle, a.ArticleDetail, c.CategoryTitle }); // projection
 
             //--------------------------------------------------------------------------
             //// like in lambda expression
@@ -106,8 +107,8 @@ namespace SimpleEFApp.Controllers
             //    a.Date == context.AccountBalanceByDate
             //         .Where(b => b.AccountId == a.AccountId && b.Date < date).Max(b => b.Date));
 
-            
-            return Ok(r);
+
+            return Ok(context.GetByCategory(id));
         }
     }
 }

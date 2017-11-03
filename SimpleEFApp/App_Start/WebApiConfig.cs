@@ -22,9 +22,9 @@ namespace SimpleEFApp
             config.Formatters.Remove(config.Formatters.XmlFormatter);
             //HttpConfiguration config = GlobalConfiguration.Configuration;
 
-            //config.Formatters.JsonFormatter
-            //            .SerializerSettings
-            //            .ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            config.Formatters.JsonFormatter
+                        .SerializerSettings
+                        .ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
         }
     }
 }

@@ -9,85 +9,106 @@ using SimpleEFApp;
 using SimpleEFApp.Models;
 using SimpleEFApp.Controllers;
 using FakeItEasy;
+using SimpleEFApp.Interface;
+using System.Web.Http.Results;
 
 namespace SimpleEFApp.Tests.Controllers
 {
     [TestClass]
     public class ValuesControllerTest
     {
-        private static NewsContext context = new NewsContext();
-        private static ValuesController controller = new ValuesController
-        {
-            Request = new System.Net.Http.HttpRequestMessage(),
-            Configuration = new System.Web.Http.HttpConfiguration()
-        };
+        // Dont use database resource in testing.
+        // Instead use Mocker  and Fakers
+        // Here i am using FakeItEasy library
+        private readonly static Article DEMO_ARTICLE = new Article { ArticleId = 1, ArticleTitle = "anon", CategoryId = 1 };
 
         [TestMethod]
         public void Get()
         {
-            // Act
-            var result = controller.Get();
-            var result_db = context.Articles;
+            // Arrange 
+            var mockObject = A.Fake<ICommonOperations>();
+            A.CallTo(() => mockObject.GetAllArticles()).Returns(new List<Article> { DEMO_ARTICLE });
+            var controller = new ValuesController(mockObject);
 
+            // Act
+            IHttpActionResult result = controller.Get();
+            var contentResult = result as OkNegotiatedContentResult<IEnumerable<Article>>;
             // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(result_db.Count(), result.Count());
-            Assert.AreEqual(result_db.Find(1).ArticleTitle, result.ElementAt(0).ArticleTitle);
+            Assert.IsNotNull(contentResult);
+            Assert.AreEqual(1, contentResult.Content.Count());
+            Assert.AreEqual("anon", contentResult.Content.ElementAt(0).ArticleTitle);
 
         }
 
         [TestMethod]
         public void GetById()
         {
-            var result = controller.Get(1);
-            var result_db = context.Articles.Find(1);
+            var mockObject = A.Fake<ICommonOperations>();
+            A.CallTo(() => mockObject.GetArticle(1)).Returns(DEMO_ARTICLE);
+            var controller = new ValuesController(mockObject);
+
+            // Act
+            IHttpActionResult result = controller.Get(1);
+            var contentResult = result as OkNegotiatedContentResult<Article>;
+
+            // Assert
+            Assert.IsNotNull(contentResult);
+            Assert.AreEqual("anon", contentResult.Content.ArticleTitle);
+
+        }
+
+        [TestMethod]
+        public void Add()
+        {
+            // Arrange
+            var mockObject = A.Fake<ICommonOperations>();
+            A.CallTo(() => mockObject.AddArticle(DEMO_ARTICLE)).Returns(true);
+            var controller = new ValuesController(mockObject);
+
+            // Act
+            IHttpActionResult result = controller.AddNew(DEMO_ARTICLE);
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.AreEqual(result_db.ArticleTitle, result.ArticleTitle);
+            Assert.IsNotInstanceOfType(result, typeof(OkResult));
 
         }
 
         [TestMethod]
-        public void Post()
+        public void Init()
         {
             // Arrange
-            ValuesController controller = new ValuesController();
+            var mockObject = A.Fake<ICommonOperations>();
+            A.CallTo(() => mockObject.Init());
+            var controller = new ValuesController(mockObject);
 
+            // Act
+            IHttpActionResult result = controller.Init();
+            var contentResult = result as OkNegotiatedContentResult<string>;
 
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.IsNotInstanceOfType(result, typeof(OkResult));
+            Assert.AreEqual("Operation Completed", contentResult.Content);
         }
 
         [TestMethod]
-        public void Put()
+        public void GetByCategory()
         {
             // Arrange
-            ValuesController controller = new ValuesController();
+            var mockObject = A.Fake<ICommonOperations>();
+            A.CallTo(() => mockObject.GetByCategory(1)).Returns(new List<Article> { DEMO_ARTICLE });
+            var controller = new ValuesController(mockObject);
 
-        }
+            // Act
+            IHttpActionResult result = controller.ByCat(1);
+            var contentResult = result as OkNegotiatedContentResult<IEnumerable<Article>>;
 
-        [TestMethod]
-        public void Delete()
-        {
-            // Arrange
-            ValuesController controller = new ValuesController();
-
-        }
-
-        [TestMethod]
-        public void SampleFakeItTest()
-        {
-            var a = A.Fake<Article>();
-            var res = A.CallTo(() => a.ArticleId).Returns(1);
-
-        }
-
-        class B<T>
-        {
-            private List<T> list = new List<T>();
-            public void FakeList(int size)
-            {
-
-            }
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.IsNotInstanceOfType(result, typeof(OkResult));
+            Assert.AreEqual(1, contentResult.Content.Count());
+            Assert.AreEqual("anon", contentResult.Content.ElementAt(0).ArticleTitle);
         }
     }
 

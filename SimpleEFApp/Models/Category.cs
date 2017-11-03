@@ -9,11 +9,11 @@ namespace SimpleEFApp.Models
     {
         public Category() { }
 
-      
+
         public int CategoryId { get; set; }
 
         public string CategoryTitle { get; set; }
 
-       // public ICollection<Article> Articles { get; set; }
+      //  public ICollection<Article> Articles { get; set; }
     }
 }
